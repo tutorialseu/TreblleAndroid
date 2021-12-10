@@ -48,7 +48,18 @@ android {
 }
 
 dependencies {
-    //Todo 10: We extended material icons dependency for additional icons
+    //Todo 1: Add required dependencies
+    //start
+    //Retrofit library for communicating with the Api
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    //Moshi converter to turn json response from the api to kotlin object and vice versa
+    implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
+    //dependency to make retrofit and moshi compatible
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    //dependency for logging the network status when communicating with the api
+    implementation "com.squareup.okhttp3:logging-interceptor:4.7.2"
+    //end
+
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'

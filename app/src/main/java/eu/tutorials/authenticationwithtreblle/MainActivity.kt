@@ -17,7 +17,6 @@ class MainActivity : ComponentActivity() {
             AuthenticationWithTreblleTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    //Todo 2 Replace Greeting with Authentication
                  Authentication()
                 }
             }
@@ -25,7 +24,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//Todo 1: Delete Greeting and create Authentication composable
 @Composable
 fun Authentication() {
 
@@ -35,7 +33,6 @@ fun Authentication() {
 @Composable
 fun DefaultPreview() {
     AuthenticationWithTreblleTheme {
-        //Todo 3: Replace Greeting with Authentication
      Authentication()
     }
 }
