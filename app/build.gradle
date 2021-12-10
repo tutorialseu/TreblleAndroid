@@ -48,7 +48,6 @@ android {
 }
 
 dependencies {
-    //Todo 1: Add required dependencies
     //start
     //Retrofit library for communicating with the Api
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
