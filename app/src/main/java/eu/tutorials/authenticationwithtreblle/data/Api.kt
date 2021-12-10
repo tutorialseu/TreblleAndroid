@@ -1,8 +1,7 @@
-package eu.tutorials.authenticationwithtreblle.data.model
+package eu.tutorials.authenticationwithtreblle.data
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import eu.tutorials.authenticationwithtreblle.data.AuthenticationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

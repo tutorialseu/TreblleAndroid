@@ -1,4 +1,4 @@
-package eu.tutorials.authenticationwithtreblle.data.model
+package eu.tutorials.authenticationwithtreblle.data
 
 
 //Todo 3: create a model package and within it create a file called User where all the data classes will be created
