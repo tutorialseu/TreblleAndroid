@@ -21,13 +21,9 @@ import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-    //Todo 21: we create a repository variable by lazy
     private val repository by lazy {
         Repository(Api.authService)
     }
-    /*Todo 22: we initialize mainViewModel using viewModels and MainViewModelFactory that we
-       have created and pass in repository
-    * */
     private val viewModel: MainViewModel by viewModels {
         MainViewModelFactory(repository = repository)
     }
@@ -39,7 +35,6 @@ class MainActivity : ComponentActivity() {
             AuthenticationWithTreblleTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    //Todo 23 we provide viewModel as argument
                     Authentication(viewModel = viewModel)
                 }
             }
@@ -51,12 +46,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Authentication(
-    //Todo 19: We create a viewModel parameter
     viewModel: MainViewModel) {
-    //Todo 3: we create rememberNavController variable, call MainScreen and pass in as argument
     val navController = rememberNavController()
     MainScreen(navHostController = navController,
-        //Todo 20: We pass in as argument
         viewModel = viewModel)
 }
 

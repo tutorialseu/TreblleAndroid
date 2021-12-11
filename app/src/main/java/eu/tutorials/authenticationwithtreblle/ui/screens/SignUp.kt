@@ -1,6 +1,7 @@
 package eu.tutorials.authenticationwithtreblle.ui.screens
 
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,13 +26,12 @@ import eu.tutorials.authenticationwithtreblle.data.RegisterUser
 import eu.tutorials.authenticationwithtreblle.data.Resource
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 
-//Todo 12: create MainViewModel as a parameter
 @Composable
 fun SignUp(viewModel: MainViewModel) {
-    /*Todo 15:To track the request progress we create a variable and collect the state set to registerUser
-    *  Below the state we create a context variable to be used with the Toast
-    * */
+
     val registerState = viewModel.registerRequestState.collectAsState().value
+    //Todo 9: We collect the user token state
+    val tokenState = viewModel.userToken.collectAsState().value
     val context = LocalContext.current
 
     val toggleState = remember {
@@ -85,10 +85,6 @@ fun SignUp(viewModel: MainViewModel) {
         )
         Button(
             onClick = {
-                /*Todo 14 In Signup button onClick we create RegisterUser and pass in the value from
-                   the emailState to email passwordState as password and confirmPassword. Then we call
-                   registerUser from viewModel and pass in registerUser
-                * */
                 val registerUser = RegisterUser(email = emailState.value,password = passwordState.value,
                     confirmPassword = passwordState.value)
                 viewModel.registerUser(registerUser = registerUser)
@@ -109,12 +105,6 @@ fun SignUp(viewModel: MainViewModel) {
             Text(text = "Login", fontWeight = FontWeight.Bold)
         }
 
-        /*Todo 16:  Here we check is th State is loading we make a simple toast to show its loading,
-            if its successful we show a Success message and if there is an error we show an error message
-            and check the Logcat to see what the error could be because we have added a logging interceptor
-            to our library to communicate what message is coming from the server or network
-         */
-
    when(registerState){
        is Resource.Loading->{
            Toast.makeText(context,"registration in Progress",Toast.LENGTH_LONG).show()
@@ -126,12 +116,33 @@ fun SignUp(viewModel: MainViewModel) {
 
        is Resource.Error->{
            Toast.makeText(context,"An error has occurred",Toast.LENGTH_LONG).show()
+           //TOdo 8: When a user successfully registers we can request for a token with the username and password
+           viewModel.loginUser(username = emailState.value,password = passwordState.value)
        }
    }
+        /*Todo 10 we monitor the token state and when its loading we can show a toast message like
+            onboarding user, when its successful we need to save this token somewhere because it does not expire until
+            a certain period of time which we will see when we log the response and then take the user
+            into the app and in this case is the profile screen so it can be used for accessing or performing
+            other user specific operations like uploading profile image and fetching it back to display on the screen.
+        *   and if there is an error we show a toast with the error message. For now we will just log the token response
+        * */
+        when(tokenState){
+            is Resource.Loading ->{
+                Toast.makeText(context,"onboarding user",Toast.LENGTH_LONG).show()
+            }
+
+            is Resource.Success->{
+                Log.d("Token","${tokenState.data}")
+            }
+
+            is Resource.Error ->{
+                Toast.makeText(context,"An error has occurred",Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }
 
-//Todo 13:provide a default argument for MainViewModel
 @Preview(showBackground = true)
 @Composable
 fun SignupPrev() {

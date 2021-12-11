@@ -9,8 +9,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object Api {
 
-    private val BASE_URL = "https://authteblle20211206115422.azurewebsites.net/api/"
+    private val BASE_URL = "https://authteblle20211206115422.azurewebsites.net/"
 
+    /*Todo 1:Break down base url since token does not contain api path, we will still need it for
+    *  request we will make*/
+    const val BASE_URl_EXTENDED = "api/"
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
