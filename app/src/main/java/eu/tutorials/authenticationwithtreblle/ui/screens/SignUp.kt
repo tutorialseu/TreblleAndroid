@@ -112,12 +112,13 @@ fun SignUp(viewModel: MainViewModel) {
 
        is Resource.Success->{
            Toast.makeText(context,"User SuccessFully Registered",Toast.LENGTH_LONG).show()
+           //TOdo 8: When a user successfully registers we can request for a token with the username and password
+           viewModel.loginUser(username = emailState.value,password = passwordState.value)
        }
 
        is Resource.Error->{
            Toast.makeText(context,"An error has occurred",Toast.LENGTH_LONG).show()
-           //TOdo 8: When a user successfully registers we can request for a token with the username and password
-           viewModel.loginUser(username = emailState.value,password = passwordState.value)
+
        }
    }
         /*Todo 10 we monitor the token state and when its loading we can show a toast message like
