@@ -21,16 +21,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import eu.tutorials.authenticationwithtreblle.data.RegisterUser
 import eu.tutorials.authenticationwithtreblle.data.Resource
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 
-//Todo 12: create MainViewModel as a parameter
 @Composable
-fun SignUp(viewModel: MainViewModel) {
-    /*Todo 15:To track the request progress we create a variable and collect the state set to registerUser
-    *  Below the state we create a context variable to be used with the Toast
-    * */
+fun SignUp(viewModel: MainViewModel,
+           //Todo 9: We create a NavController parameter
+           navController: NavController) {
     val registerState = viewModel.registerRequestState.collectAsState().value
     val context = LocalContext.current
 
@@ -85,10 +85,6 @@ fun SignUp(viewModel: MainViewModel) {
         )
         Button(
             onClick = {
-                /*Todo 14 In Signup button onClick we create RegisterUser and pass in the value from
-                   the emailState to email passwordState as password and confirmPassword. Then we call
-                   registerUser from viewModel and pass in registerUser
-                * */
                 val registerUser = RegisterUser(email = emailState.value,password = passwordState.value,
                     confirmPassword = passwordState.value)
                 viewModel.registerUser(registerUser = registerUser)
@@ -109,12 +105,6 @@ fun SignUp(viewModel: MainViewModel) {
             Text(text = "Login", fontWeight = FontWeight.Bold)
         }
 
-        /*Todo 16:  Here we check is th State is loading we make a simple toast to show its loading,
-            if its successful we show a Success message and if there is an error we show an error message
-            and check the Logcat to see what the error could be because we have added a logging interceptor
-            to our library to communicate what message is coming from the server or network
-         */
-
    when(registerState){
        is Resource.Loading->{
            Toast.makeText(context,"registration in Progress",Toast.LENGTH_LONG).show()
@@ -122,6 +112,15 @@ fun SignUp(viewModel: MainViewModel) {
 
        is Resource.Success->{
            Toast.makeText(context,"User SuccessFully Registered",Toast.LENGTH_LONG).show()
+           /*Todo 11: On successful registeration we set navigation into the profile route,
+           *  set launchSingleTop to true and popUpTo to login with inclusive set to true
+           * */
+           navController.navigate("profile"){
+               launchSingleTop = true
+               popUpTo("login"){
+                   inclusive = true
+               }
+           }
        }
 
        is Resource.Error->{
@@ -131,9 +130,10 @@ fun SignUp(viewModel: MainViewModel) {
     }
 }
 
-//Todo 13:provide a default argument for MainViewModel
 @Preview(showBackground = true)
 @Composable
 fun SignupPrev() {
-    SignUp(viewModel())
+    SignUp(viewModel(),
+        //Todo 10 add navController argument
+        rememberNavController())
 }
