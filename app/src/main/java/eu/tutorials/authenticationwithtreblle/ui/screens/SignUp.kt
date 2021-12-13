@@ -29,7 +29,6 @@ import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 
 @Composable
 fun SignUp(viewModel: MainViewModel,
-           //Todo 9: We create a NavController parameter
            navController: NavController) {
     val registerState = viewModel.registerRequestState.collectAsState().value
     val context = LocalContext.current
@@ -105,28 +104,27 @@ fun SignUp(viewModel: MainViewModel,
             Text(text = "Login", fontWeight = FontWeight.Bold)
         }
 
-   when(registerState){
-       is Resource.Loading->{
-           Toast.makeText(context,"registration in Progress",Toast.LENGTH_LONG).show()
-       }
+    }
 
-       is Resource.Success->{
-           Toast.makeText(context,"User SuccessFully Registered",Toast.LENGTH_LONG).show()
-           /*Todo 11: On successful registration we set navigation into the profile route,
-           *  set launchSingleTop to true and popUpTo to login with inclusive set to true
-           * */
-           navController.navigate("profile"){
-               launchSingleTop = true
-               popUpTo("login"){
-                   inclusive = true
-               }
-           }
-       }
+    when(registerState){
+        is Resource.Loading->{
+            Toast.makeText(context,"registration in Progress",Toast.LENGTH_LONG).show()
+        }
 
-       is Resource.Error->{
-           Toast.makeText(context,"An error has occurred",Toast.LENGTH_LONG).show()
-       }
-   }
+        is Resource.Success->{
+            //Todo 10: trigger token request
+            viewModel.loginUser(username = emailState.value,password = passwordState.value)
+            navController.navigate("profile"){
+                launchSingleTop = true
+                popUpTo("login"){
+                    inclusive = true
+                }
+            }
+        }
+
+        is Resource.Error->{
+            Toast.makeText(context,"An error has occurred",Toast.LENGTH_LONG).show()
+        }
     }
 }
 
@@ -134,6 +132,5 @@ fun SignUp(viewModel: MainViewModel,
 @Composable
 fun SignupPrev() {
     SignUp(viewModel(),
-        //Todo 10 add navController argument
         rememberNavController())
 }

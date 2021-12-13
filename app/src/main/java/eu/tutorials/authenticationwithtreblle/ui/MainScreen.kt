@@ -15,12 +15,12 @@ fun MainScreen(navHostController: NavHostController,
     composable("signup"){
         SignUp(
             viewModel = viewModel,
-        //Todo 12: we provide argument for navController
         navController = navHostController
         )
     }
         composable("profile"){
-            Profile()
+            //Todo 16: Pass in MainViewModel argument
+            Profile(viewModel = viewModel)
         }
     }
 }
