@@ -19,7 +19,6 @@ fun MainScreen(navHostController: NavHostController,
         )
     }
         composable("profile"){
-            //Todo 16: Pass in MainViewModel argument
             Profile(viewModel = viewModel)
         }
     }

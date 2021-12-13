@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import eu.tutorials.authenticationwithtreblle.data.Api
+import eu.tutorials.authenticationwithtreblle.data.PreferenceStore
 import eu.tutorials.authenticationwithtreblle.data.Repository
 import eu.tutorials.authenticationwithtreblle.ui.MainScreen
 import eu.tutorials.authenticationwithtreblle.ui.screens.SignUp
@@ -21,8 +22,11 @@ import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
+   private val preferenceStore by lazy {
+        PreferenceStore(this)
+    }
     private val repository by lazy {
-        Repository(Api.authService)
+        Repository(Api.authService,preferenceStore = preferenceStore)
     }
     private val viewModel: MainViewModel by viewModels {
         MainViewModelFactory(repository = repository)

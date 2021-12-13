@@ -8,18 +8,18 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -42,6 +42,20 @@ fun SignUp(viewModel: MainViewModel,
     }
     val emailState = remember {
         mutableStateOf("")
+    }
+        /*Todo 16: Since Signup is the first screen when the app is launched
+           we collect the token from datastore and check if it is not empty that means there is an
+           existing user so we go straight to the Profile screen and keep using the token. If not
+           it keeps the user on the Signup page to either register or go to login screen
+       */
+    val tokenPref = viewModel.prefToken().collectAsState().value
+    if (tokenPref.isNotEmpty()){
+        navController.navigate("profile"){
+            launchSingleTop = true
+            popUpTo("login"){
+                inclusive = true
+            }
+        }
     }
     Column(
         modifier = Modifier
@@ -112,8 +126,7 @@ fun SignUp(viewModel: MainViewModel,
         }
 
         is Resource.Success->{
-            //Todo 10: trigger token request
-            viewModel.loginUser(username = emailState.value,password = passwordState.value)
+                viewModel.loginUser(username = emailState.value, password = passwordState.value)
             navController.navigate("profile"){
                 launchSingleTop = true
                 popUpTo("login"){

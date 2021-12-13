@@ -1,5 +1,6 @@
 package eu.tutorials.authenticationwithtreblle.ui.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,33 +30,35 @@ import eu.tutorials.authenticationwithtreblle.data.LoginUserResponse
 import eu.tutorials.authenticationwithtreblle.data.Resource
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 
-//Todo 11: create MainViewmodel as a parameter
 @Composable
 fun Profile(viewModel: MainViewModel) {
 
-    /*Todo 13: collect tokenState value from the viewmodel, create a context for showing
-    *  a toast and a remember variable for holding the token object when it is successful*/
-    //start
     val tokenState = viewModel.userToken.collectAsState().value
     val context = LocalContext.current
-    val data = remember {
-        mutableStateOf(LoginUserResponse())
-    }
-    //end
 
+    /*Todo 14: we remove data variable and
+       collect the preference values from MainViewmodel and
+    assign to a variable
+     */
+    //start
+    val token = viewModel.prefToken().collectAsState().value
+    val email = viewModel.prefEmail().collectAsState().value
+   //end
     Box(modifier = Modifier.fillMaxSize()) {
-        /*TOdo 14 when tokenState is Loading we show CircularProgressIndicator
-        *  with alignment set to center, if successful we set the data to the variable we  created
-        *  above and when there is an error we show the error toast.
-        *
-        * */
         when (tokenState) {
             is Resource.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             is Resource.Success -> {
                 if (tokenState.data != null) {
-                    data.value = tokenState.data
+               /*Todo 15: if tokenstate is fetched from the network we get the toke and email
+               and save it to preference data store
+             */
+                 //start
+                    viewModel.saveToken(tokenState.data.access_token)
+                    viewModel.saveEmail(tokenState.data.userName)
+                    Log.d("tokenet", tokenState.data.access_token)
+                    //end
                 }
             }
             is Resource.Error -> {
@@ -63,10 +66,13 @@ fun Profile(viewModel: MainViewModel) {
             }
 
         }
-            /*Todo 15: We check if the token is not empty before we set Card composable
-            *  and set the email/username  to Text composable
-            * */
-        if (data.value.access_token.isNotEmpty()) {
+
+        Log.d("tokenet", "$email and $token")
+        /*Todo 16: Here we replace token from the internet with token from
+        preference datastore. so we only fetch from the internet once where there is no
+        existing user on the app.
+         */
+        if (token.isNotEmpty()) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,7 +102,7 @@ fun Profile(viewModel: MainViewModel) {
                             .background(color = Color.LightGray)
                     )
                     Text(
-                        text = data.value.userName, modifier = Modifier.padding(top = 10.dp)
+                        text =email, modifier = Modifier.padding(top = 10.dp)
                     )
                     Button(
                         onClick = {
@@ -119,7 +125,6 @@ fun Profile(viewModel: MainViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun ProfilePrev() {
-    //Todo 12: set default viewmodel as the parameter
     Profile(viewModel())
 }
 
