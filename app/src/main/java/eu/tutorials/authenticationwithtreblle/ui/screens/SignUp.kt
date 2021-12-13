@@ -112,7 +112,7 @@ fun SignUp(viewModel: MainViewModel,
 
        is Resource.Success->{
            Toast.makeText(context,"User SuccessFully Registered",Toast.LENGTH_LONG).show()
-           /*Todo 11: On successful registeration we set navigation into the profile route,
+           /*Todo 11: On successful registration we set navigation into the profile route,
            *  set launchSingleTop to true and popUpTo to login with inclusive set to true
            * */
            navController.navigate("profile"){
