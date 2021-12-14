@@ -43,11 +43,7 @@ fun SignUp(viewModel: MainViewModel,
     val emailState = remember {
         mutableStateOf("")
     }
-        /*Todo 16: Since Signup is the first screen when the app is launched
-           we collect the token from datastore and check if it is not empty that means there is an
-           existing user so we go straight to the Profile screen and keep using the token. If not
-           it keeps the user on the Signup page to either register or go to login screen
-       */
+
     val tokenPref = viewModel.prefToken().collectAsState().value
     if (tokenPref.isNotEmpty()){
         navController.navigate("profile"){

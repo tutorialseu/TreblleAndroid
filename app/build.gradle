@@ -48,7 +48,8 @@ android {
 }
 
 dependencies {
-    //Todo 1: Add preference datastore dependency
+    //Todo 1: Add permission dependency from accompanist
+    implementation "com.google.accompanist:accompanist-permissions:0.21.1-beta"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     //Moshi converter to turn json response from the api to kotlin object and vice versa

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import eu.tutorials.authenticationwithtreblle.data.Api
 import eu.tutorials.authenticationwithtreblle.data.PreferenceStore
 import eu.tutorials.authenticationwithtreblle.data.Repository
@@ -20,6 +21,8 @@ import eu.tutorials.authenticationwithtreblle.ui.theme.AuthenticationWithTreblle
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModelFactory
 
+//Todo 12: Add experimental annotation for the permissions api
+@ExperimentalPermissionsApi
 class MainActivity : ComponentActivity() {
 
    private val preferenceStore by lazy {
@@ -47,7 +50,8 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
+//Todo 11: Add experimental annotation for the permissions api
+@ExperimentalPermissionsApi
 @Composable
 fun Authentication(
     viewModel: MainViewModel) {
@@ -56,6 +60,8 @@ fun Authentication(
         viewModel = viewModel)
 }
 
+//Todo 13: Add experimental annotation for the permissions api
+@ExperimentalPermissionsApi
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {

@@ -47,10 +47,7 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         }
 
     }
-/*Todo 11: create a saveToken and save email method, launch coroutine scope, set a delay to allow the
-    token to be fetched from the server then set the save methods from the repository
- */
-    //start
+
     fun saveToken(token:String){
         viewModelScope.launch {
             delay(500L)
@@ -64,13 +61,7 @@ class MainViewModel(private val repository: Repository):ViewModel() {
             repository.saveEmail(email = email)
         }
     }
-    //end
 
-    /*Todo 12: We create a setter to hold each pref value, we create a method
-    * to collect the value from datastore and assign to the setter and let the method return the
-    * setter variable
-    * */
-    //start
     private val _prefToken = MutableStateFlow("")
     fun prefToken():StateFlow<String>{
         viewModelScope.launch {
@@ -90,5 +81,5 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         }
         return _prefEmail
     }
-    //end
+
 }
