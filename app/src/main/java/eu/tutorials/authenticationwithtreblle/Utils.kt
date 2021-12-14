@@ -7,11 +7,6 @@ import java.io.ByteArrayOutputStream
 
 object Utils {
 
-    /* Todo 14: we create an extension function as Bitmap so we can easily
-        called the method from the bitmap version
-        of the URI and we are returning a String. In this function we first compress
-        the image to reduce its size after its selected, convert it to  byteArray and then to base64.
-        */
     fun Bitmap.bitmapToBase64():String {
         val byteArrayOutputStream = ByteArrayOutputStream()
         this.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
@@ -20,4 +15,11 @@ object Utils {
     }
 
 
+    /*Todo 11 we create a String extension function to directly convert the base64 String returned
+    back to a Bitmap
+     */
+    fun String.base64ToByteCode():Bitmap {
+        val decodedString =  Base64.decode(this.substring(this.indexOf(",") + 1), Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    }
 }

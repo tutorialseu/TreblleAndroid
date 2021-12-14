@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,12 +35,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import eu.tutorials.authenticationwithtreblle.R
+import eu.tutorials.authenticationwithtreblle.Utils.base64ToByteCode
 import eu.tutorials.authenticationwithtreblle.Utils.bitmapToBase64
 import eu.tutorials.authenticationwithtreblle.data.LoginUserResponse
 import eu.tutorials.authenticationwithtreblle.data.Resource
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 
-//Todo 4: Because permission api is experimental we add the annotation
 @ExperimentalPermissionsApi
 @Composable
 fun Profile(viewModel: MainViewModel) {
@@ -49,28 +51,22 @@ fun Profile(viewModel: MainViewModel) {
     val token = viewModel.prefToken().collectAsState().value
     val email = viewModel.prefEmail().collectAsState().value
 
-    //Todo 3: We create a variable and assign READ_EXTERNAL_STORAGE permission
     val permissionsState = rememberPermissionState(
         permission = Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    //Todo 5: create a variable to hold the uri to the image from gallery
+
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
 
-    //Todo 6: We create a launcher to open the gallery expecting a result which will be the image uri
     val launcher = rememberLauncherForActivityResult(
         contract =
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri = uri
     }
-    //Todo 9: Log the image to confirm it was collected successfully
-    Log.d("imageuri","$imageUri")
 
-    /*Todo 15 create a bitmap variable and convert the image Uri to bitmap*/
-    //start
     var bitmap: Bitmap? = null
 
     imageUri?.let {
@@ -84,9 +80,8 @@ fun Profile(viewModel: MainViewModel) {
             ImageDecoder.decodeBitmap(source)
         }
     }
-    //end
-
-
+    //Todo 9: call getUserProfile from MainViewModel and pass in the email and Bearer + token as key
+    viewModel.getUserProfile(username = email, key = "Bearer $token")
     Box(modifier = Modifier.fillMaxSize()) {
         when (tokenState) {
             is Resource.Loading -> {
@@ -101,7 +96,7 @@ fun Profile(viewModel: MainViewModel) {
                 }
             }
             is Resource.Error -> {
-                Toast.makeText(context, "An error has occurred", Toast.LENGTH_LONG).show()
+
             }
 
         }
@@ -120,49 +115,66 @@ fun Profile(viewModel: MainViewModel) {
                         .wrapContentSize()
                         .padding(top = 16.dp)
                 ) {
-                    //Todo 16 using the method from Utils class convert the bitmap  to base64
-                    //start
-                    bitmap?.let { btm ->
-                        val imageUrl = btm.bitmapToBase64()
-                        Log.d("base64",imageUrl)
+                    /*Todo 10: when imageResult is null or Blank we set the default launcher image
+                    else we get the base64 Image and call the method from Utils class to
+                    convert back to Bitmap then set to the Image element
+                     */
+             //start
+                    when (val imageResult = viewModel.userImage.collectAsState().value) {
+                        is Resource.Success -> {
+                            if (imageResult.data.isNullOrBlank()) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(200.dp)
+                                        .border(
+                                            shape = CircleShape,
+                                            width = 1.dp,
+                                            color = Color.White
+                                        )
+                                        .clip(
+                                            CircleShape
+                                        )
+                                        .background(color = Color.LightGray)
+                                )
+                            } else imageResult.data.base64ToByteCode().let {
+                                Image(
+                                    bitmap = it.asImageBitmap(),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(200.dp)
+                                        .border(
+                                            shape = CircleShape,
+                                            width = 1.dp,
+                                            color = Color.White
+                                        )
+                                        .clip(
+                                            CircleShape
+                                        )
+                                        .background(color = Color.LightGray)
+                                )
+                            }
+                        }
                     }
                     //end
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(200.dp)
-                            .border(
-                                shape = CircleShape,
-                                width = 1.dp,
-                                color = Color.White
-                            )
-                            .clip(
-                                CircleShape
-                            )
-                            .background(color = Color.LightGray)
-                    )
+
                     Text(
-                        text =email, modifier = Modifier.padding(top = 10.dp)
+                        text = email, modifier = Modifier.padding(top = 10.dp)
                     )
                     Button(
                         onClick = {
-                            /*Todo 8: when edit profile button is clicked we check if permission to
-                            *  access external storage has been accepted then launch the gallery
-                            *  with available images.
-                            * If permission should showRationale then show a message to let the user know that the permission
-                            * needs to be accepted.
-                            * If not launch request for permission */
                             when {
                                 permissionsState.hasPermission -> {
                                     launcher.launch("image/*")
                                 }
-                                /*
-                                shouldShowRationale is setup to not keep forcing the user to accept permission after 2 denies
-                                but you only tell them why permission is needed then they can go to settings and enable it themselves
-                                 */
+
                                 permissionsState.shouldShowRationale -> {
-                                    Toast.makeText(context,"Read Storage permission is need to update profile ",Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        context,
+                                        "Read Storage permission is need to update profile ",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                                 else -> {
                                     permissionsState.launchPermissionRequest()
@@ -179,10 +191,19 @@ fun Profile(viewModel: MainViewModel) {
                 }
             }
         }
+        bitmap?.let { btm ->
+            val imageUrl = btm.bitmapToBase64()
+            /*Todo 5: after we get base64 format we call the addUserImage from viewModel pass in
+               the arguments and for the key we add Bearer String and the token as requested by the api
+             */
+            viewModel.addUserImage(username = email, imageUrl = imageUrl, key = "Bearer $token")
+        }
+
     }
+
 }
 
-//Todo 7: Add the experimentalPermissions annotation
+
 @ExperimentalPermissionsApi
 @Preview(showBackground = true)
 @Composable

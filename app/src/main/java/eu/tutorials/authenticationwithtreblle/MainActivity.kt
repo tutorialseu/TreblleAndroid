@@ -21,7 +21,6 @@ import eu.tutorials.authenticationwithtreblle.ui.theme.AuthenticationWithTreblle
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModelFactory
 
-//Todo 12: Add experimental annotation for the permissions api
 @ExperimentalPermissionsApi
 class MainActivity : ComponentActivity() {
 
@@ -50,7 +49,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-//Todo 11: Add experimental annotation for the permissions api
 @ExperimentalPermissionsApi
 @Composable
 fun Authentication(
@@ -60,7 +58,6 @@ fun Authentication(
         viewModel = viewModel)
 }
 
-//Todo 13: Add experimental annotation for the permissions api
 @ExperimentalPermissionsApi
 @Preview(showBackground = true)
 @Composable
