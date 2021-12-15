@@ -9,7 +9,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object Api {
 
-    private val BASE_URL = "https://authteblle20211206115422.azurewebsites.net/"
+    private val BASE_URL = "https://treblledemo20211214131915.azurewebsites.net/"
 
     const val BASE_URl_EXTENDED = "api/"
 
