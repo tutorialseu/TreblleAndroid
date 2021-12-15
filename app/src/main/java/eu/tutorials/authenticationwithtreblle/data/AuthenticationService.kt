@@ -7,7 +7,7 @@ import retrofit2.http.POST
 
 interface AuthenticationService {
 
-    @POST("${Api.BASE_URl_EXTENDED}Account/Register")
+    @POST("${Api.API_PATH}Account/Register")
     suspend fun registerUser(@Body registerUser: RegisterUser)
 
     /**Todo 1: Create a suspend method and annotate with @Post with token as its appended path
