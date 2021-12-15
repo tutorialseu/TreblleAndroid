@@ -11,7 +11,7 @@ object Api {
 
     private val BASE_URL = "https://treblledemo20211214131915.azurewebsites.net/"
 
-    const val BASE_URl_EXTENDED = "api/"
+    const val API_PATH = "api/"
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
