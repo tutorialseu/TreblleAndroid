@@ -1,6 +1,5 @@
 package eu.tutorials.authenticationwithtreblle.data
 
-import eu.tutorials.authenticationwithtreblle.data.RegisterUser
 import retrofit2.http.Body
 import retrofit2.http.POST
 
