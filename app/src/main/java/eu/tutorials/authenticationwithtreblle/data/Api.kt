@@ -9,12 +9,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object Api {
 
-    //Todo 3: remove api from the base url as token does not contain api in its path
-    private val BASE_URL = "https://authteblle20211206115422.azurewebsites.net/"
+    private val BASE_URL = "https://treblledemo20211214131915.azurewebsites.net/"
 
-    /*Todo 4:create a const variable for it as we  still need it for
-       *  2 other request we will make. Now we will add this to the Register request
-       * */
     const val BASE_URl_EXTENDED = "api/"
 
     private val moshi = Moshi.Builder()

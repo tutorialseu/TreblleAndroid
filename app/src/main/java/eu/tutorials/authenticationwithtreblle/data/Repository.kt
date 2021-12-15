@@ -7,7 +7,7 @@ class Repository(private val authService: AuthenticationService) {
     }
 
     /*
-    Todo 6: We create a suspend function with username and password parameters to return the loginUser
+    Todo 3: We create a suspend function with username and password parameters to return the loginUser
      request from the service class */
     suspend fun loginUser(username:String,password:String):LoginUserResponse =
         authService.loginUser(username = username, password = password)

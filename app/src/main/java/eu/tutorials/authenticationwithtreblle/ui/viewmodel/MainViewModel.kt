@@ -18,7 +18,7 @@ class MainViewModel(private val repository: Repository):ViewModel() {
     val registerRequestState:StateFlow<Resource<Nothing>?>
     get() = _registerRequestState
 
-    /*Todo 7: create a setter to hold the value from the login request
+    /*Todo 6: create a setter to hold the value from the login request
       and a getter to expose this value to composables that needs it*/
     private val _userToken = MutableStateFlow<Resource<LoginUserResponse>?>(null)
     val userToken:StateFlow<Resource<LoginUserResponse>?>
@@ -27,7 +27,7 @@ class MainViewModel(private val repository: Repository):ViewModel() {
     val errorHandler = CoroutineExceptionHandler { _, error ->
         if (error is Exception) {
             _registerRequestState.value = Resource.Error(error.message!!)
-            //Todo 9:set error status when it occurs
+            //Todo 5:set error status when it occurs
             _userToken.value = Resource.Error(error.message!!)
         }
     }
@@ -40,7 +40,7 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         }
     }
 
-    /*Todo 8: create a function to process user token request, set Resource.Loading before launching the
+    /*Todo 4: create a function to process user token request, set Resource.Loading before launching the
    *  request and Resource.Success when the result is successful*/
     fun loginUser(username:String,password:String){
         _userToken.value = Resource.Loading(null)

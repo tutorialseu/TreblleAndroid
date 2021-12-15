@@ -7,7 +7,6 @@ import retrofit2.http.POST
 
 interface AuthenticationService {
 
-    //Todo 5: update the value with the new const variable
     @POST("${Api.BASE_URl_EXTENDED}Account/Register")
     suspend fun registerUser(@Body registerUser: RegisterUser)
 

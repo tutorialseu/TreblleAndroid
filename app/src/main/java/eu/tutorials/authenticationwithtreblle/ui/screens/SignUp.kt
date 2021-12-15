@@ -85,7 +85,7 @@ fun SignUp(viewModel: MainViewModel,
         Button(
             onClick = {
                 val registerUser = RegisterUser(email = emailState.value,password = passwordState.value,
-                    confirmPassword = passwordState.value)
+                    password_confirmation = passwordState.value)
                 viewModel.registerUser(registerUser = registerUser)
             }, modifier = Modifier
                 .fillMaxWidth()
@@ -112,7 +112,7 @@ fun SignUp(viewModel: MainViewModel,
         }
 
         is Resource.Success->{
-            //Todo 10: trigger token request
+            //Todo 7: call loginUser before navigating to profile screen
             viewModel.loginUser(username = emailState.value,password = passwordState.value)
             navController.navigate("profile"){
                 launchSingleTop = true

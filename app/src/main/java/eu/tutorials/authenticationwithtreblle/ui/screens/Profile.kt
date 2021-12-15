@@ -29,11 +29,11 @@ import eu.tutorials.authenticationwithtreblle.data.LoginUserResponse
 import eu.tutorials.authenticationwithtreblle.data.Resource
 import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 
-//Todo 11: create MainViewmodel as a parameter
+//Todo 8: create MainViewmodel as a parameter
 @Composable
 fun Profile(viewModel: MainViewModel) {
 
-    /*Todo 13: collect tokenState value from the viewmodel, create a context for showing
+    /*Todo 10: collect tokenState value from the viewmodel, create a context for showing
     *  a toast and a remember variable for holding the token object when it is successful*/
     //start
     val tokenState = viewModel.userToken.collectAsState().value
@@ -44,7 +44,7 @@ fun Profile(viewModel: MainViewModel) {
     //end
 
     Box(modifier = Modifier.fillMaxSize()) {
-        /*TOdo 14 when tokenState is Loading we show CircularProgressIndicator
+        /*TOdo 11 when tokenState is Loading we show CircularProgressIndicator
         *  with alignment set to center, if successful we set the data to the variable we  created
         *  above and when there is an error we show the error toast.
         *
@@ -63,7 +63,7 @@ fun Profile(viewModel: MainViewModel) {
             }
 
         }
-            /*Todo 15: We check if the token is not empty before we set Card composable
+            /*Todo 12: We check if the token is not empty before we set Card composable
             *  and set the email/username  to Text composable
             * */
         if (data.value.access_token.isNotEmpty()) {
@@ -119,7 +119,7 @@ fun Profile(viewModel: MainViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun ProfilePrev() {
-    //Todo 12: set default viewmodel as the parameter
+    //Todo 9: set default viewmodel as the parameter
     Profile(viewModel())
 }
 
