@@ -4,7 +4,7 @@ import retrofit2.http.*
 
 interface AuthenticationService {
 
-    @POST("${Api.BASE_URl_EXTENDED}Account/Register")
+    @POST("${Api.API_PATH}Account/Register")
     suspend fun registerUser(@Body registerUser: RegisterUser)
 
     @POST("token")
@@ -21,7 +21,7 @@ interface AuthenticationService {
         Without the correct token passed in belonging to that user we cannot make changes to their account.
         */
     @FormUrlEncoded
-    @POST("${Api.BASE_URl_EXTENDED}UserProfile")
+    @POST("${Api.API_PATH}UserProfile")
     suspend fun addUserImage(
         @Field("UserName") username: String,
         @Field("ProfileImage") imageUrl: String,
@@ -30,7 +30,7 @@ interface AuthenticationService {
 
     /* Todo 6: Create a function with @Query parameter and UserName value,
     *   Add @Header annotation with Authorization value for setting the token*/
-    @GET("${Api.BASE_URl_EXTENDED}UserProfile")
+    @GET("${Api.API_PATH}UserProfile")
     suspend fun getUserProfile(
         @Query("UserName") userName: String,
         @Header("Authorization") key: String
