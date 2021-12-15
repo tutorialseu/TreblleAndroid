@@ -116,7 +116,7 @@ fun SignUp(viewModel: MainViewModel,
             viewModel.loginUser(username = emailState.value,password = passwordState.value)
             navController.navigate("profile"){
                 launchSingleTop = true
-                popUpTo("login"){
+                popUpTo("signup"){
                     inclusive = true
                 }
             }
