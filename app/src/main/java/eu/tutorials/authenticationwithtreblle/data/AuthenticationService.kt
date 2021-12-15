@@ -5,6 +5,6 @@ import retrofit2.http.POST
 
 interface AuthenticationService {
 
-    @POST("Account/Register")
+    @POST("${Api.API_PATH}Account/Register")
     suspend fun registerUser(@Body registerUser: RegisterUser)
 }
