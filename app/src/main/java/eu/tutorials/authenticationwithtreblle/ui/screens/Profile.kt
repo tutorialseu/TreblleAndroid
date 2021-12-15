@@ -37,7 +37,7 @@ fun Profile(viewModel: MainViewModel) {
     val context = LocalContext.current
 
     /*Todo 14: we remove data variable and
-       collect the preference values from MainViewmodel and
+       collect the preference values from MainViewModel and
     assign to a variable
      */
     //start
