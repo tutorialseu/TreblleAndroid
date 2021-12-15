@@ -14,10 +14,6 @@ object Utils {
         return Base64.encodeToString(imageBytes, Base64.DEFAULT)
     }
 
-
-    /*Todo 11 we create a String extension function to directly convert the base64 String returned
-    back to a Bitmap
-     */
     fun String.base64ToByteCode():Bitmap {
         val decodedString =  Base64.decode(this.substring(this.indexOf(",") + 1), Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)

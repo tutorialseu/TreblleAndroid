@@ -80,7 +80,6 @@ fun Profile(viewModel: MainViewModel) {
             ImageDecoder.decodeBitmap(source)
         }
     }
-    //Todo 9: call getUserProfile from MainViewModel and pass in the email and Bearer + token as key
     viewModel.getUserProfile(username = email, key = "Bearer $token")
     Box(modifier = Modifier.fillMaxSize()) {
         when (tokenState) {
@@ -115,11 +114,7 @@ fun Profile(viewModel: MainViewModel) {
                         .wrapContentSize()
                         .padding(top = 16.dp)
                 ) {
-                    /*Todo 10: when imageResult is null or Blank we set the default launcher image
-                    else we get the base64 Image and call the method from Utils class to
-                    convert back to Bitmap then set to the Image element
-                     */
-             //start
+
                     when (val imageResult = viewModel.userImage.collectAsState().value) {
                         is Resource.Success -> {
                             if (imageResult.data.isNullOrBlank()) {
@@ -193,9 +188,6 @@ fun Profile(viewModel: MainViewModel) {
         }
         bitmap?.let { btm ->
             val imageUrl = btm.bitmapToBase64()
-            /*Todo 5: after we get base64 format we call the addUserImage from viewModel pass in
-               the arguments and for the key we add Bearer String and the token as requested by the api
-             */
             viewModel.addUserImage(username = email, imageUrl = imageUrl, key = "Bearer $token")
         }
 

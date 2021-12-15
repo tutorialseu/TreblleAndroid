@@ -28,7 +28,6 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         if (error is Exception) {
             _registerRequestState.value = Resource.Error(error.message!!)
             _userToken.value = Resource.Error(error.message!!)
-            //Todo 4: in the errorHandler we set the error resource to know if an error occurs
             _userImage.value = Resource.Error(error.message!!)
         }
     }
@@ -84,19 +83,13 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         return _prefEmail
     }
 
-    /* Todo 3 create a method and launch a scope to process the upload */
 
     fun addUserImage(username: String,imageUrl:String,key:String) {
         viewModelScope.launch(Dispatchers.IO + errorHandler)  {
             repository.addUserImage(username = username,imageUrl = imageUrl,key = key)
         }
     }
-    //end
 
-    /*Todo 8: create a setter holding the image response and getter for accessing it
-    *  create a function with userName and key parameters, launch a coroutine and attach athe errorHandler to
-    * the IO dispatcher. Within the launch block process the request and set the reult to Result.Success
-    * */
     private val _userImage = MutableStateFlow<Resource<String>?>(null)
     val userImage:StateFlow<Resource<String>?>
         get() = _userImage
