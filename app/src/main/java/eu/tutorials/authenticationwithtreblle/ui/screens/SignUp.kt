@@ -116,7 +116,7 @@ fun SignUp(viewModel: MainViewModel,
            * */
            navController.navigate("profile"){
                launchSingleTop = true
-               popUpTo("login"){
+               popUpTo("signup"){
                    inclusive = true
                }
            }
