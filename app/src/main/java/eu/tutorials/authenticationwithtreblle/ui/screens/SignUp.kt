@@ -2,6 +2,7 @@ package eu.tutorials.authenticationwithtreblle.ui.screens
 
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -95,7 +96,7 @@ fun SignUp(viewModel: MainViewModel,
         Button(
             onClick = {
                 val registerUser = RegisterUser(email = emailState.value,password = passwordState.value,
-                    confirmPassword = passwordState.value)
+                    password_Confirmation = passwordState.value)
                 viewModel.registerUser(registerUser = registerUser)
             }, modifier = Modifier
                 .fillMaxWidth()
@@ -107,7 +108,15 @@ fun SignUp(viewModel: MainViewModel,
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp).clickable {
+                    //Todo 4: make the Row clickable and add navigation to the login screen
+                    navController.navigate("login"){
+                        launchSingleTop = true
+                        popUpTo("signup"){
+                            inclusive = true
+                        }
+                    }
+                },
             horizontalArrangement = Arrangement.Center
         ) {
             Text(text = "Already Have An Account? ")
