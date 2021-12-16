@@ -45,7 +45,6 @@ import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 @Composable
 fun Profile(viewModel: MainViewModel) {
 
-    val tokenState = viewModel.userToken.collectAsState().value
     val context = LocalContext.current
 
     val token = viewModel.prefToken().collectAsState().value
@@ -54,7 +53,6 @@ fun Profile(viewModel: MainViewModel) {
     val permissionsState = rememberPermissionState(
         permission = Manifest.permission.READ_EXTERNAL_STORAGE
     )
-
 
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -80,26 +78,20 @@ fun Profile(viewModel: MainViewModel) {
             ImageDecoder.decodeBitmap(source)
         }
     }
+
     viewModel.getUserProfile(username = email, key = "Bearer $token")
     Box(modifier = Modifier.fillMaxSize()) {
-        when (tokenState) {
-            is Resource.Loading -> {
+        if (token.isEmpty()) {
+            val tokenState = viewModel.userToken.collectAsState().value
+            if (tokenState is Resource.Loading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            is Resource.Success -> {
+            } else if (tokenState is Resource.Success) {
                 if (tokenState.data != null) {
-
                     viewModel.saveToken(tokenState.data.access_token)
                     viewModel.saveEmail(tokenState.data.userName)
-
                 }
             }
-            is Resource.Error -> {
-
-            }
-
         }
-
         if (token.isNotEmpty()) {
             Card(
                 modifier = Modifier
@@ -114,41 +106,26 @@ fun Profile(viewModel: MainViewModel) {
                         .wrapContentSize()
                         .padding(top = 16.dp)
                 ) {
-
                     when (val imageResult = viewModel.userImage.collectAsState().value) {
                         is Resource.Success -> {
-                            if (imageResult.data.isNullOrBlank()) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(200.dp)
-                                        .border(
-                                            shape = CircleShape,
-                                            width = 1.dp,
-                                            color = Color.White
-                                        )
-                                        .clip(
-                                            CircleShape
-                                        )
-                                        .background(color = Color.LightGray)
-                                )
-                            } else imageResult.data.base64ToByteCode().let {
-                                Image(
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(200.dp)
-                                        .border(
-                                            shape = CircleShape,
-                                            width = 1.dp,
-                                            color = Color.White
-                                        )
-                                        .clip(
-                                            CircleShape
-                                        )
-                                        .background(color = Color.LightGray)
-                                )
+                            if (!imageResult.data.isNullOrBlank()) {
+                                imageResult.data.base64ToByteCode().let {
+                                    Image(
+                                        bitmap = it.asImageBitmap(),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(200.dp)
+                                            .border(
+                                                shape = CircleShape,
+                                                width = 1.dp,
+                                                color = Color.White
+                                            )
+                                            .clip(
+                                                CircleShape
+                                            )
+                                            .background(color = Color.LightGray)
+                                    )
+                                }
                             }
                         }
                     }
@@ -189,7 +166,9 @@ fun Profile(viewModel: MainViewModel) {
         bitmap?.let { btm ->
             val imageUrl = btm.bitmapToBase64()
             viewModel.addUserImage(username = email, imageUrl = imageUrl, key = "Bearer $token")
+
         }
+
 
     }
 

@@ -13,12 +13,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
 class MainViewModel(private val repository: Repository):ViewModel() {
 
     private val _registerRequestState = MutableStateFlow<Resource<Nothing>?>(null)
     val registerRequestState:StateFlow<Resource<Nothing>?>
-    get() = _registerRequestState
+        get() = _registerRequestState
 
     private val _userToken = MutableStateFlow<Resource<LoginUserResponse>?>(null)
     val userToken:StateFlow<Resource<LoginUserResponse>?>
@@ -33,7 +32,7 @@ class MainViewModel(private val repository: Repository):ViewModel() {
     }
 
     fun registerUser(registerUser: RegisterUser) {
-       _registerRequestState.value = Resource.Loading(null)
+        _registerRequestState.value = Resource.Loading(null)
         viewModelScope.launch(Dispatchers.IO + errorHandler) {
             repository.registerUser(registerUser = registerUser)
             _registerRequestState.value = Resource.Success(null)
@@ -44,6 +43,13 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         _userToken.value = Resource.Loading(null)
         viewModelScope.launch(Dispatchers.IO + errorHandler) {
             val result = repository.loginUser(username = username, password = password)
+            delay(500L)
+            _userToken.value?.data?.access_token?.let {
+                saveToken(it)
+            }
+            _userToken.value?.data?.userName?.let {
+                saveEmail(it)
+            }
             _userToken.value = Resource.Success(result)
         }
 
@@ -87,6 +93,8 @@ class MainViewModel(private val repository: Repository):ViewModel() {
     fun addUserImage(username: String,imageUrl:String,key:String) {
         viewModelScope.launch(Dispatchers.IO + errorHandler)  {
             repository.addUserImage(username = username,imageUrl = imageUrl,key = key)
+            delay(500L)
+            getUserProfile(username = username,key = key)
         }
     }
 
