@@ -78,11 +78,13 @@ fun Profile(viewModel: MainViewModel) {
             ImageDecoder.decodeBitmap(source)
         }
     }
-    //Todo 10: call getUserProfile from MainViewModel and pass in the email and Bearer + token as key
+    /*Todo 10: call getUserProfile from MainViewModel and pass in the email and Bearer + token as key
+     when the screen is launched to check for an existing image and fetch it
+     */
     viewModel.getUserProfile(username = email, key = "Bearer $token")
     Box(modifier = Modifier.fillMaxSize()) {
-        /*Todo 11 we move tokenState from the been a global variable into this box to stop continous recompostion
-        and only collect when token is empty
+        /*Todo 11 we move tokenState from the been a global variable into this box to stop continuous recomposition
+        before saving to pref if it wasn't saved in the viewModel class at any point
          */
         if (token.isEmpty()) {
             val tokenState = viewModel.userToken.collectAsState().value
@@ -109,7 +111,7 @@ fun Profile(viewModel: MainViewModel) {
                         .wrapContentSize()
                         .padding(top = 16.dp)
                 ) {
-                    /*Todo 12: when imageResult id successful we get the base64 Image and call the method from Utils class to
+                    /*Todo 13: when imageResult id is successful we get the base64 Image and call the method from Utils class to
                     convert back to Bitmap then set to the Image element
                      */
                     //start

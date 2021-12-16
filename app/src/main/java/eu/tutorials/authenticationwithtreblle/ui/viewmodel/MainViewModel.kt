@@ -45,6 +45,18 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         _userToken.value = Resource.Loading(null)
         viewModelScope.launch(Dispatchers.IO + errorHandler) {
             val result = repository.loginUser(username = username, password = password)
+            delay(500L)
+            /*Todo 9: To reduce the number of recomposition depending during Login we
+            save token and email before setting the success result
+             */
+            //start
+            _userToken.value?.data?.access_token?.let {
+                saveToken(it)
+            }
+            _userToken.value?.data?.userName?.let {
+                saveEmail(it)
+            }
+            //end
             _userToken.value = Resource.Success(result)
         }
 
@@ -85,7 +97,7 @@ class MainViewModel(private val repository: Repository):ViewModel() {
     }
 
     /* Todo 3 create a method and launch a scope to process the upload and for the every
-    * added image we call getUserProfile to display the image
+    *    added image we call getUserProfile to display the image
     * */
 
     fun addUserImage(username: String,imageUrl:String,key:String) {
