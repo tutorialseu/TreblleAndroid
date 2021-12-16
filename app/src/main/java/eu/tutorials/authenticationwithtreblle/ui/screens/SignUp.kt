@@ -95,7 +95,7 @@ fun SignUp(viewModel: MainViewModel,
         Button(
             onClick = {
                 val registerUser = RegisterUser(email = emailState.value,password = passwordState.value,
-                    password_confirmation= passwordState.value)
+                    confirmPassword= passwordState.value)
                 viewModel.registerUser(registerUser = registerUser)
             }, modifier = Modifier
                 .fillMaxWidth()

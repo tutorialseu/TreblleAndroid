@@ -84,11 +84,15 @@ class MainViewModel(private val repository: Repository):ViewModel() {
         return _prefEmail
     }
 
-    /* Todo 3 create a method and launch a scope to process the upload */
+    /* Todo 3 create a method and launch a scope to process the upload and for the every
+    * added image we call getUserProfile to display the image
+    * */
 
     fun addUserImage(username: String,imageUrl:String,key:String) {
         viewModelScope.launch(Dispatchers.IO + errorHandler)  {
             repository.addUserImage(username = username,imageUrl = imageUrl,key = key)
+            delay(500L)
+            getUserProfile(username = username,key = key)
         }
     }
     //end

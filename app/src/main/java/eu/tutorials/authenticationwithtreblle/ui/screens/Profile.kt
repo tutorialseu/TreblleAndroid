@@ -45,7 +45,6 @@ import eu.tutorials.authenticationwithtreblle.ui.viewmodel.MainViewModel
 @Composable
 fun Profile(viewModel: MainViewModel) {
 
-    val tokenState = viewModel.userToken.collectAsState().value
     val context = LocalContext.current
 
     val token = viewModel.prefToken().collectAsState().value
@@ -54,7 +53,6 @@ fun Profile(viewModel: MainViewModel) {
     val permissionsState = rememberPermissionState(
         permission = Manifest.permission.READ_EXTERNAL_STORAGE
     )
-
 
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -80,27 +78,23 @@ fun Profile(viewModel: MainViewModel) {
             ImageDecoder.decodeBitmap(source)
         }
     }
-    //Todo 9: call getUserProfile from MainViewModel and pass in the email and Bearer + token as key
+    //Todo 10: call getUserProfile from MainViewModel and pass in the email and Bearer + token as key
     viewModel.getUserProfile(username = email, key = "Bearer $token")
     Box(modifier = Modifier.fillMaxSize()) {
-        when (tokenState) {
-            is Resource.Loading -> {
+        /*Todo 11 we move tokenState from the been a global variable into this box to stop continous recompostion
+        and only collect when token is empty
+         */
+        if (token.isEmpty()) {
+            val tokenState = viewModel.userToken.collectAsState().value
+            if (tokenState is Resource.Loading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            is Resource.Success -> {
+            } else if (tokenState is Resource.Success) {
                 if (tokenState.data != null) {
-
                     viewModel.saveToken(tokenState.data.access_token)
                     viewModel.saveEmail(tokenState.data.userName)
-
                 }
             }
-            is Resource.Error -> {
-
-            }
-
         }
-
         if (token.isNotEmpty()) {
             Card(
                 modifier = Modifier
@@ -115,45 +109,30 @@ fun Profile(viewModel: MainViewModel) {
                         .wrapContentSize()
                         .padding(top = 16.dp)
                 ) {
-                    /*Todo 10: when imageResult is null or Blank we set the default launcher image
-                    else we get the base64 Image and call the method from Utils class to
+                    /*Todo 12: when imageResult id successful we get the base64 Image and call the method from Utils class to
                     convert back to Bitmap then set to the Image element
                      */
-             //start
+                    //start
                     when (val imageResult = viewModel.userImage.collectAsState().value) {
                         is Resource.Success -> {
-                            if (imageResult.data.isNullOrBlank()) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(200.dp)
-                                        .border(
-                                            shape = CircleShape,
-                                            width = 1.dp,
-                                            color = Color.White
-                                        )
-                                        .clip(
-                                            CircleShape
-                                        )
-                                        .background(color = Color.LightGray)
-                                )
-                            } else imageResult.data.base64ToByteCode().let {
-                                Image(
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(200.dp)
-                                        .border(
-                                            shape = CircleShape,
-                                            width = 1.dp,
-                                            color = Color.White
-                                        )
-                                        .clip(
-                                            CircleShape
-                                        )
-                                        .background(color = Color.LightGray)
-                                )
+                            if (!imageResult.data.isNullOrBlank()) {
+                                imageResult.data.base64ToByteCode().let {
+                                    Image(
+                                        bitmap = it.asImageBitmap(),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(200.dp)
+                                            .border(
+                                                shape = CircleShape,
+                                                width = 1.dp,
+                                                color = Color.White
+                                            )
+                                            .clip(
+                                                CircleShape
+                                            )
+                                            .background(color = Color.LightGray)
+                                    )
+                                }
                             }
                         }
                     }
@@ -197,7 +176,9 @@ fun Profile(viewModel: MainViewModel) {
                the arguments and for the key we add Bearer String and the token as requested by the api
              */
             viewModel.addUserImage(username = email, imageUrl = imageUrl, key = "Bearer $token")
+
         }
+
 
     }
 

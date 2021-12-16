@@ -6,10 +6,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
 object Api {
 
-    private val BASE_URL = "https://treblledemo20211214131915.azurewebsites.net/"
+    private val BASE_URL = "https://authteblle20211206115422.azurewebsites.net/"
 
     const val API_PATH = "api/"
 
